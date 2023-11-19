@@ -1,31 +1,30 @@
-import React, { Component } from 'react';
+import { useState } from 'react';
 import { nanoid } from 'nanoid';
 import Notiflix from 'notiflix';
 import { Form, Input, Button, Text } from './ContactForm.styled';
 
-export class ContactForm extends Component {
+export ContactForm = ({onSubmit}) => {
   
- state = {
-      name: '',
-      number: ''    
-  }
+  const [name, setName] = setState('');
+  const [number, setNumber] = setState('');
 
-  handleNameChange = (evt) => {
-    this.setState({
-      name: evt.target.value,
-    });
-  };
-
-  handleNumberChange = (evt) => {
-    this.setState({
-      number: evt.target.value,
-    });
+  const handleChange = (evt) => {
+    const { name, number } = evt.target;
+    switch (name) {
+      case 'name': setName(value);
+        break;
+      case 'number': setNumber(value);
+        break;
+      default:
+        return;
+    }
   };
 
   handleSubmit = (evt) => {
     evt.preventDefault();
-    const { name, number } = this.state;
-    const { addContact, contacts } = this.props;
+    onSubmit({ name, number });
+    setName('');
+    setNumber('');
 
     if (name.trim() === '' || number.trim() === '') {
       return;
@@ -49,18 +48,15 @@ export class ContactForm extends Component {
       number: number.trim(),
     };
 
-    addContact(newContact);
+    const addContact(newContact);
     this.setState({
       name: '',
       number: '',
     });
   };
 
-  render() {
-    const { name, number } = this.state;
-
     return (
-      <Form onSubmit={this.handleSubmit}>
+      <Form onSubmit={handleSubmit}>
         <Text>Name</Text>
         <Input
           type="text"
@@ -69,7 +65,7 @@ export class ContactForm extends Component {
           title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
           required
           value={name}
-          onChange={this.handleNameChange}
+          onChange={handleChange}
         />
         <Text>Number</Text>
         <Input
@@ -79,10 +75,9 @@ export class ContactForm extends Component {
           title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
           required
           value={number}
-          onChange={this.handleNumberChange}
+          onChange={handleChange}
         />
         <Button type="submit">Add Contact</Button>
       </Form>
     );
-  }
 }
