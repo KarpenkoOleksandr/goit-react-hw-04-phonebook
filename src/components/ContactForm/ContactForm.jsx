@@ -1,60 +1,35 @@
 import { useState } from 'react';
 import { nanoid } from 'nanoid';
-import Notiflix from 'notiflix';
 import { Form, Input, Button, Text } from './ContactForm.styled';
 
-export ContactForm = ({onSubmit}) => {
+export const ContactForm = ({addContact}) => {
   
-  const [name, setName] = setState('');
-  const [number, setNumber] = setState('');
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
 
-  const handleChange = (evt) => {
-    const { name, number } = evt.target;
-    switch (name) {
-      case 'name': setName(value);
-        break;
-      case 'number': setNumber(value);
-        break;
-      default:
-        return;
-    }
+  const handleNameChange = (event) => {
+    setName(event.target.value);
   };
 
-  handleSubmit = (evt) => {
-    evt.preventDefault();
-    onSubmit({ name, number });
-    setName('');
-    setNumber('');
+  const handleNumberChange = (event) => {
+    setNumber(event.target.value);
+  };
 
+  const handleSubmit = (event) => {
+    event.preventDefault();
     if (name.trim() === '' || number.trim() === '') {
       return;
-    }
+    } 
 
-    const existingContact = contacts.find(
-      (contact) => contact.name.toLowerCase() === name.toLowerCase()
-    );
-    if (existingContact) {
-      Notiflix.Report.warning(
-        'Alert',
-        `Contact with name "${name}" already exists!`,
-        'Ok'
-      );      
-      return;
-    }
-
-    const newContact = {
+ const newContact = {
       id: nanoid(),
       name: name.trim(),
       number: number.trim(),
     };
-
-    const addContact(newContact);
-    this.setState({
-      name: '',
-      number: '',
-    });
+    addContact(newContact);
+    setName('');
+    setNumber('');
   };
-
     return (
       <Form onSubmit={handleSubmit}>
         <Text>Name</Text>
@@ -65,7 +40,7 @@ export ContactForm = ({onSubmit}) => {
           title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
           required
           value={name}
-          onChange={handleChange}
+          onChange={handleNameChange}
         />
         <Text>Number</Text>
         <Input
@@ -75,7 +50,7 @@ export ContactForm = ({onSubmit}) => {
           title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
           required
           value={number}
-          onChange={handleChange}
+          onChange={handleNumberChange}
         />
         <Button type="submit">Add Contact</Button>
       </Form>
